@@ -4,10 +4,14 @@ Création d'une API Rest BileMo, une entreprise de vente de téléphone.
 ____________________________________________________________________________________________________
 
 Environnement utilisé durant le développement
+
 Symfony 6
+
 PHP 8
+
 Installation
-Repo Size
+
+
 Exécutez la ligne de commande suivante pour télécharger le projet dans le répertoire de votre choix:
 
 git clone https://github.com/Daddypro21/Bilemo_api.git
