@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\DateTimeTzType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -58,23 +60,19 @@ class Product
 
     #[ORM\Column]
     #[Groups(["getProduct"])]
-    #[Assert\NotBlank(message: "Le champ wifi est obligatoire")]
-    private ?bool $wifi = null;
+    private ?bool $wifi = false;
 
     #[ORM\Column]
     #[Groups(["getProduct"])]
-    #[Assert\NotBlank(message: "Le champ video est obligatoire")]
-    private ?bool $video = null;
+    private ?bool $video = false;
 
     #[ORM\Column]
     #[Groups(["getProduct"])]
-    #[Assert\NotBlank(message: "Le champ bluetooth est obligatoire")]
-    private ?bool $bluetooth = null;
+    private ?bool $bluetooth = false;
 
     #[ORM\Column]
     #[Groups(["getProduct"])]
-    #[Assert\NotBlank(message: "Le champ camera est obligatoire")]
-    private ?bool $camera = null;
+    private ?bool $camera = false;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Configuration::class)]
     #[Groups(["getProduct"])]
@@ -88,16 +86,17 @@ class Product
     #[Groups(["getProduct"])]
     private ?User $userr = null;
 
-    #[ORM\Column]
-    #[Groups(["getProduct"])]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
-    #[Groups(["getProduct"])]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
 
     public function __construct()
     {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
         $this->configurations = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
@@ -191,7 +190,7 @@ class Product
         return $this;
     }
 
-    public function isWifi(): ?bool
+    public function getWifi(): ?bool
     {
         return $this->wifi;
     }
@@ -203,7 +202,7 @@ class Product
         return $this;
     }
 
-    public function isVideo(): ?bool
+    public function getVideo(): ?bool
     {
         return $this->video;
     }
@@ -215,7 +214,7 @@ class Product
         return $this;
     }
 
-    public function isBluetooth(): ?bool
+    public function getBluetooth(): ?bool
     {
         return $this->bluetooth;
     }
@@ -227,7 +226,7 @@ class Product
         return $this;
     }
 
-    public function isCamera(): ?bool
+    public function getCamera(): ?bool
     {
         return $this->camera;
     }
@@ -316,7 +315,7 @@ class Product
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -328,10 +327,15 @@ class Product
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
+
+
+   
+
+
 }
