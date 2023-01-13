@@ -24,12 +24,15 @@ Base de données
 Modifier la connexion à la base de données dans le fichier .env.
 
 DATABASE_URL=mysql://root:@127.0.0.1:3306/bilemo-api
+
 Créer une base de données:
 
 symfony console doctrine:database:create
+
 Créez la structure de la base de données:
 
 symfony console doctrine:migrations:migrate
+
 Chargez les données initiales:
 
 symfony console doctrine:fixtures:load
