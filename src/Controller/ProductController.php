@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Entity\Product;
 use App\Entity\Configuration;
-use App\Service\VersioningService;
 use App\Repository\ProductRepository;
 use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,9 +18,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use OpenApi\Annotations as OA;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
@@ -196,6 +193,8 @@ class ProductController extends AbstractController
      * 
      * DES ACTIONS OU METHODE QUI RESTE A CREER
      * 
+     * modifier la configuration et l'image
+     * 
      * public function addCustomer();
      * 
      * public function getAllCustomers();
@@ -217,6 +216,9 @@ class ProductController extends AbstractController
      * 
      * OPTIMISER LA GESTION DES ERREURS
      */
+
+
+     //UserCustomer
 
      
 }   

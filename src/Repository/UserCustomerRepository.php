@@ -39,6 +39,14 @@ class UserCustomerRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllWithPagination($page, $limit) 
+    {
+        $qp = $this->createQueryBuilder('c')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+        return $qp->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return UserCustomer[] Returns an array of UserCustomer objects
 //     */

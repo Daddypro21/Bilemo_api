@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use App\Repository\UserCustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserCustomerRepository::class)]
 class UserCustomer
@@ -11,17 +14,25 @@ class UserCustomer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getCustomer"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getCustomer"])]
+    #[Assert\NotBlank(message: "Ce champ est obligatoire")]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getCustomer"])]
+    #[Assert\NotBlank(message: "Ce champ est obligatoire")]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getCustomer"])]
+    #[Assert\NotBlank(message: "Ce champ est obligatoire")]
     private ?string $email = null;
 
+    
     #[ORM\ManyToOne(inversedBy: 'userCustomers')]
     private ?User $userr = null;
 
