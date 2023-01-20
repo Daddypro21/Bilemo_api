@@ -18,12 +18,52 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
+
+
 class ProductController extends AbstractController
 {
+
+
+                
+    /**
+     * 
+     * Cette méthode permet de récupérer l'ensemble des produits.
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne la liste des produits",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Product::class, groups={"getProduct"}))
+     *     )
+     * )
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="La page que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Le nombre d'éléments que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Tag(name="Products")
+     *
+     * @param ProductRepository $productRepo
+     * @param SerializerInterface $serializer
+     * @param Request $request
+     * @return JsonResponse
+     */
 
     #[Route('/api/products', name: 'app_product',methods:'GET')]
     public function getAllProducts( Request $request,ProductRepository $productRepo,
@@ -38,28 +78,42 @@ class ProductController extends AbstractController
             $item->tag("productsCache");
             $ProductList = $productRepo->findAllWithPagination($page, $limit);
             $context = SerializationContext::create()->setGroups(['getProduct']);
-            // $version = $versioningService->getVersion();
-            // $context->setVersion($version);
-
             return $serializer->serialize($ProductList, 'json', $context);
         });
-      
-        return new JsonResponse($jsonProductList, Response::HTTP_OK, [], true);
+       
+        return new JsonResponse($jsonProductList, Response::HTTP_OK,[], true);
     }
 
+
+    /**
+     * Cette méthode permet de récupérer un produit.
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne un produit",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Product::class, groups={"getProduct"}))
+     *     )
+     * )
+     * 
+     *  @OA\Tag(name="Products")
+     */
     #[Route('/api/products/{id}', name: 'app_product_detail',methods:'GET')]
     public function getDetailProduct(Product $product,ProductRepository $productRepo,SerializerInterface $serializer,
     ):JsonResponse
     {
         $context = SerializationContext::create()->setGroups(['getProduct']);
-        // $version = $versioningService->getVersion();
-        // $context->setVersion($version);
         $jsonProduct = $serializer->serialize($product,'json',$context);
         return new JsonResponse($jsonProduct,Response::HTTP_OK,['accept'=>'json'],true);
     }
 
    
-
+    /**
+     * Cette méthode permet de supprimer un produit.
+     * 
+     *  @OA\Tag(name="Products")
+     */
     #[Route('/api/products/{id}', name: 'app_delete_product',methods:'DELETE')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour supprimer ce produit')]
     public function deleteProduct( Product $product, EntityManagerInterface $em, TagAwareCacheInterface $cachePool):JsonResponse
@@ -70,6 +124,82 @@ class ProductController extends AbstractController
         return new JsonResponse(null,Response::HTTP_NO_CONTENT);
     }
 
+   /**
+     * Cette méthode permet d'ajouter un produit.
+     * 
+     *  @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Le nom du produit",
+     *     @OA\Schema(type="string")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="description",
+     *     in="query",
+     *     description="La description du produit",
+     *     @OA\Schema(type="string")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="screen",
+     *     in="query",
+     *     description="L'ecran su produit",
+     *     @OA\Schema(type="float")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="weight",
+     *     in="query",
+     *     description="Le weight du produit",
+     *     @OA\Schema(type="float")
+     * )
+     *   @OA\Parameter(
+     *     name="width",
+     *     in="query",
+     *     description="Le width du produit",
+     *     @OA\Schema(type="float")
+     * )
+     * @OA\Parameter(
+     *     name="height",
+     *     in="query",
+     *     description="Le height du produit",
+     *     @OA\Schema(type="float")
+     * )
+     *   @OA\Parameter(
+     *     name="legth",
+     *     in="query",
+     *     description="Length du produit",
+     *     @OA\Schema(type="float")
+     * )
+     *   @OA\Parameter(
+     *     name="wifi",
+     *     in="query",
+     *     description="Le wifi",
+     *     @OA\Schema(type="bool")
+     * )
+     *  @OA\Parameter(
+     *     name="video",
+     *     in="query",
+     *     description="La video",
+     *     @OA\Schema(type="bool")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="bluetooth",
+     *     in="query",
+     *     description="Le bluetooth",
+     *     @OA\Schema(type="bool")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="camera",
+     *     in="query",
+     *     description="La camera",
+     *     @OA\Schema(type="bool")
+     * )
+     *  @OA\Tag(name="Products")
+     */
     #[Route('/api/products', name: 'app_create_product',methods:'POST')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour créer un produit')]
     public function createProduct(Request $request, SerializerInterface $serializer, 
@@ -97,6 +227,12 @@ class ProductController extends AbstractController
 
 
     }
+
+    /**
+     * Cette méthode permet d'ajouter une image à un produit.
+     * 
+     *  @OA\Tag(name="Products")
+     */
     #[Route('/api/products/image', name: 'app_add_image',methods:'POST')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour ajouter une image à un produit')]
     public function addImage(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, 
@@ -124,6 +260,11 @@ class ProductController extends AbstractController
          return new JsonResponse( $jsonImage, Response::HTTP_CREATED, ["Location" => $location], true);
     }
 
+    /**
+     * Cette méthode permet d'ajouter la configuration du produit.
+     * 
+     *  @OA\Tag(name="Products")
+     */
     #[Route('/api/products/configuration', name: 'app_add_configuration',methods:'POST')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour ajouter une configuration à un produit')]
     public function addConfiguration(Request $request, SerializerInterface $serializer, EntityManagerInterface $em,
@@ -153,7 +294,82 @@ class ProductController extends AbstractController
 
     }
 
-    
+    /**
+     * Cette méthode permet de modifier un produit.
+     * 
+     *  @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Le nom du produit",
+     *     @OA\Schema(type="string")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="description",
+     *     in="query",
+     *     description="La description du produit",
+     *     @OA\Schema(type="string")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="screen",
+     *     in="query",
+     *     description="L'ecran su produit",
+     *     @OA\Schema(type="float")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="weight",
+     *     in="query",
+     *     description="Le weight du produit",
+     *     @OA\Schema(type="float")
+     * )
+     *   @OA\Parameter(
+     *     name="width",
+     *     in="query",
+     *     description="Le width du produit",
+     *     @OA\Schema(type="float")
+     * )
+     * @OA\Parameter(
+     *     name="height",
+     *     in="query",
+     *     description="Le height du produit",
+     *     @OA\Schema(type="float")
+     * )
+     *   @OA\Parameter(
+     *     name="legth",
+     *     in="query",
+     *     description="Length du produit",
+     *     @OA\Schema(type="float")
+     * )
+     *   @OA\Parameter(
+     *     name="wifi",
+     *     in="query",
+     *     description="Le wifi",
+     *     @OA\Schema(type="bool")
+     * )
+     *  @OA\Parameter(
+     *     name="video",
+     *     in="query",
+     *     description="La video",
+     *     @OA\Schema(type="bool")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="bluetooth",
+     *     in="query",
+     *     description="Le bluetooth",
+     *     @OA\Schema(type="bool")
+     * )
+     * 
+     *  @OA\Parameter(
+     *     name="camera",
+     *     in="query",
+     *     description="La camera",
+     *     @OA\Schema(type="bool")
+     * )
+     *  @OA\Tag(name="Products")
+     */
     #[Route('/api/products/{id}', name: 'app_update_product',methods:'PUT')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour modifier un produit')]
     public function updateProduct(Request $request, SerializerInterface $serializer, Product $currentProduct, EntityManagerInterface $em, 
@@ -187,38 +403,7 @@ class ProductController extends AbstractController
 
     }
 
-    /**
-     * 
-     * 
-     * 
-     * DES ACTIONS OU METHODE QUI RESTE A CREER
-     * 
-     * modifier la configuration et l'image
-     * 
-     * public function addCustomer();
-     * 
-     * public function getAllCustomers();
-     * 
-     * 
-     * public function getDetailCustomer();
-     * 
-     * 
-     * public function deleteCustomer();
-     * 
-     * 
-     * AJOUTER LE TROISIEME NIVEAU DE RICHARDSON
-     * 
-     * Ce bundle  "composer require willdurand/hateoas-bundle " ne marche pas avec le version de symfony que j'ai,
-     * que puis je utiliser à la place pour ajouter le troisieme niveau de richardson ?
-     * 
-     * AJOUTER LA DOCUMENTATION AVEC NELMIO
-     * 
-     * 
-     * OPTIMISER LA GESTION DES ERREURS
-     */
-
-
-     //UserCustomer
+   
 
      
 }   

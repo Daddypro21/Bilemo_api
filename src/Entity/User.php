@@ -17,15 +17,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getProduct"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(["getProduct"])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(["getProduct"])]
     private array $roles = [];
 
     /**
@@ -35,7 +32,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getProduct"])]
     private ?string $fullname = null;
 
     #[ORM\OneToMany(mappedBy: 'userr', targetEntity: Product::class)]
