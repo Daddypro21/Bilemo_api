@@ -21,32 +21,43 @@ composer install
 _______________________________________________________________________________________
 
 Base de données
-Modifier la connexion à la base de données dans le fichier .env.
+Modifier la connexion à la base de données dans le fichier env
 
+```env
 DATABASE_URL=mysql://root:@127.0.0.1:3306/bilemo-api
-
+```
 Créer une base de données:
 
+Commande :
+```sh
+#Créé la base de donnée:
 symfony console doctrine:database:create
 
-Créez la structure de la base de données:
+#Créez la structure de la base de données:
 
 symfony console doctrine:migrations:migrate
 
-Chargez les données initiales:
+#Chargez les données initiales:
 
 symfony console doctrine:fixtures:load
+```
 ______________________________________________________________________________________
 
-Lancez l'application
-Lancez l'environnement d'exécution Apache / Php en utilisant:
+Commande:
+
+```sh
+#Lancez l'application
+#Lancez l'environnement d'exécution Apache / Php en utilisant:
 
 php bin/console server:run ou symfony console server:start
 
+```
 
-Documentation API - Nelmio
+Commande:
+```sh
+#Documentation API - Nelmio
 
-Crédits d'utilisateur par défaut :
+#Crédits d'utilisateur par défaut :
 
 
 
@@ -59,3 +70,5 @@ Crédits d'utilisateur par défaut :
 
   "username": "admin@bilemoapi.com",
   "password": "password"
+  
+```
