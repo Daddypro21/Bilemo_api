@@ -59,13 +59,8 @@ php bin/console server:run ou symfony console server:start
 
 ```
 
-**Commande:**
+**Crédits d'utilisateur par défaut:**
 ```sh
-#Documentation API - Nelmio
-
-#Crédits d'utilisateur par défaut :
-
-
 
     ROLE_USER
 
