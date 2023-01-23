@@ -27,6 +27,28 @@ class CustomerController extends AbstractController
     /**
      * Cette méthode permet de récupérer tous les clients liés à un utilisateurs.
      * 
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne la liste des clients",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Product::class, groups={"getCustomer"}))
+     *     )
+     * )
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="La page que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Le nombre d'éléments que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     * 
      *  @OA\Tag(name="Customers")
      */
     #[Route('/api/customers', name: 'app_customer',methods:'GET')]
@@ -52,28 +74,38 @@ class CustomerController extends AbstractController
     }
 
     /**
+      * Cette méthode permet de voir le détail d'un client.
+      * 
+      * 
+      *  @OA\Tag(name="Customers")
+      */
+      #[Route('/api/customers/{id}', name: 'app_customer_detail',methods:'GET')]
+      #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas les droits suffisants pour acceder aux données d\'un client')]
+      public function getDetailCustomer(UserCustomer $userCustomer,SerializerInterface $serializer,
+      ):JsonResponse
+      {
+          $context = SerializationContext::create()->setGroups(['getCustomer']);
+          $jsonUserCustomer = $serializer->serialize($userCustomer,'json',$context);
+          return new JsonResponse( $jsonUserCustomer,Response::HTTP_OK,['accept'=>'json'],true);
+      }
+
+    /**
      * Cette méthode permet d'ajouter un client.
      * 
-     *  @OA\Parameter(
-     *     name="firstname",
-     *     in="query",
-     *     description="Le prenom du client",
-     *     @OA\Schema(type="string")
-     * )
-     *
-     * @OA\Parameter(
-     *     name="lastname",
-     *     in="query",
-     *     description="Le nom du client",
-     *     @OA\Schema(type="string")
-     * )
+     * @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         @OA\Property(property="firstname", type="string", example="John"),
+     *         @OA\Property(property="lastname", type="string", example="Doe"),
+     *         @OA\Property(property="email", type="string", example="John@gmail.com"),
+     *      
+     *       )
+     *     )
+     *   )
      * 
-     *  @OA\Parameter(
-     *     name="email",
-     *     in="query",
-     *     description="L'email du client",
-     *     @OA\Schema(type="string")
-     * )
+     * 
      *  @OA\Tag(name="Customers")
      */
     #[Route('/api/customers', name: 'app_add_customer',methods:'POST')]
@@ -104,57 +136,6 @@ class CustomerController extends AbstractController
 
     }
 
-
-    
-     /**
-     * Cette méthode permet de modifier un client.
-     * 
-     * 
-     *  @OA\Tag(name="Customers")
-     */
-
-    #[Route('/api/customers/{id}', name: 'app_update_customer',methods:'PUT')]
-    #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas les droits suffisants pour modifier un client')]
-    public function updateCustomer(Request $request, SerializerInterface $serializer, UserCustomer $currentCustomer, EntityManagerInterface $em, 
-   ValidatorInterface $validator, TagAwareCacheInterface $cache)
-    {
-        $errors = $validator->validate($currentCustomer);
-
-        if ($errors->count() > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-        $newCustomer = $serializer->deserialize($request->getContent(),UserCustomer::class,'json');
-        $currentCustomer->setFirstname($newCustomer->getFirstname());
-        $currentCustomer->setLastname($newCustomer->getLastname());
-        $currentCustomer->setEmail($newCustomer->getEmail());
-        
-
-        $currentCustomer->setUserr($this->getUser());
-        $em->persist( $currentCustomer);
-        $em->flush();
-
-        $cache->invalidateTags(["customersCache"]);
-
-        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-
-    }
-
-     /**
-     * Cette méthode permet de voir le détail d'un client.
-     * 
-     * 
-     *  @OA\Tag(name="Customers")
-     */
-    #[Route('/api/customers/{id}', name: 'app_customer_detail',methods:'GET')]
-    #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas les droits suffisants pour acceder aux données d\'un client')]
-    public function getDetailCustomer(UserCustomer $userCustomer,SerializerInterface $serializer,
-    ):JsonResponse
-    {
-        $context = SerializationContext::create()->setGroups(['getCustomer']);
-        $jsonUserCustomer = $serializer->serialize($userCustomer,'json',$context);
-        return new JsonResponse( $jsonUserCustomer,Response::HTTP_OK,['accept'=>'json'],true);
-    }
-
      /**
      * Cette méthode permet de supprimer un client.
      * 
@@ -163,7 +144,7 @@ class CustomerController extends AbstractController
      */
 
     #[Route('/api/customers/{id}', name: 'app_delete_customer',methods:'DELETE')]
-    #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas les droits suffisants pour supprimer un client')]
+    #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour supprimer un client')]
     public function deleteCustomer( UserCustomer $userCustomer, EntityManagerInterface $em, TagAwareCacheInterface $cachePool):JsonResponse
     {
         $cachePool->invalidateTags(["customersCache"]);
