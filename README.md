@@ -40,7 +40,7 @@ symfony console doctrine:database:create
 
 #Créez la structure de la base de données:
 
- symfony console doctrine:migrations:migrate
+symfony console doctrine:migrations:migrate
 
 #Chargez les données initiales:
 
