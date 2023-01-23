@@ -12,13 +12,19 @@ PHP 8
 Installation
 
 
-Exécutez la ligne de commande suivante pour télécharger le projet dans le répertoire de votre choix:
+Commande:
+```sh
+
+#Exécutez la ligne de commande suivante pour télécharger le projet dans le répertoire de votre choix:
 
 git clone https://github.com/Daddypro21/Bilemo_api.git
-Installez les dépendances en exécutant la commande suivante:
+
+#Installez les dépendances en exécutant la commande suivante:
 
 composer install
-_______________________________________________________________________________________
+
+```
+______________________________________________________________________________________
 
 Base de données
 Modifier la connexion à la base de données dans le fichier env
@@ -70,5 +76,5 @@ Commande:
 
   "username": "admin@bilemoapi.com",
   "password": "password"
-  
+
 ```
