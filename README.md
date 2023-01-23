@@ -40,7 +40,7 @@ symfony console doctrine:database:create
 
 #Créez la structure de la base de données:
 
-php symfony console doctrine:migrations:migrate
+ symfony console doctrine:migrations:migrate
 
 #Chargez les données initiales:
 
@@ -54,7 +54,7 @@ ________________________________________________________________________________
 #Lancez l'application
 #Lancez l'environnement d'exécution Apache / Php en utilisant:
 
-php bin/console server:run ou symfony console server:start
+php bin/console server:run ou symfony console serve:start
 
 ```
 
