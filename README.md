@@ -12,7 +12,7 @@ PHP 8
 Installation
 
 
-Commande:
+**Commande:**
 ```sh
 
 #Exécutez la ligne de commande suivante pour télécharger le projet dans le répertoire de votre choix:
@@ -34,7 +34,7 @@ DATABASE_URL=mysql://root:@127.0.0.1:3306/bilemo-api
 ```
 Créer une base de données:
 
-Commande :
+**Commande:**
 ```sh
 #Créé la base de donnée:
 symfony console doctrine:database:create
@@ -49,7 +49,7 @@ symfony console doctrine:fixtures:load
 ```
 ______________________________________________________________________________________
 
-Commande:
+**Commande:**
 
 ```sh
 #Lancez l'application
@@ -59,7 +59,7 @@ php bin/console server:run ou symfony console server:start
 
 ```
 
-Commande:
+**Commande:**
 ```sh
 #Documentation API - Nelmio
 
