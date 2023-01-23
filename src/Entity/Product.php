@@ -32,15 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      exclusion = @Hateoas\Exclusion(groups="getProduct", excludeIf = "expr(not is_granted('ROLE_ADMIN'))"),
  * )
  *
- * @Hateoas\Relation(
- *      "update",
- *      href = @Hateoas\Route(
- *          "app_update_product",
- *          parameters = { "id" = "expr(object.getId())" },
- *      ),
- *      exclusion = @Hateoas\Exclusion(groups="getProduct", excludeIf = "expr(not is_granted('ROLE_ADMIN'))"),
- * )
- * 
+ *
  */
 
 
@@ -114,7 +106,6 @@ class Product
     private Collection $images;
 
     #[ORM\ManyToOne(inversedBy: 'product')]
-    #[Groups(["getProduct"])]
     private ?User $userr = null;
 
     #[ORM\Column(nullable: true)]

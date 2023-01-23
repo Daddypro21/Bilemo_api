@@ -8,6 +8,28 @@ use JMS\Serializer\Annotation\Groups;
 use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
+/**
+ * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "app_customer_detail",
+ *          parameters = { "id" = "expr(object.getId())" }
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(groups="getCustomer")
+ * )
+ *
+  * @Hateoas\Relation(
+ *      "delete",
+ *      href = @Hateoas\Route(
+ *          "app_delete_customer",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(groups="getCustomer", excludeIf = "expr(not is_granted('ROLE_ADMIN'))"),
+ * )
+ *
+ *
+ */
 #[ORM\Entity(repositoryClass: UserCustomerRepository::class)]
 class UserCustomer
 {
@@ -34,6 +56,8 @@ class UserCustomer
 
     
     #[ORM\ManyToOne(inversedBy: 'userCustomers')]
+
+    #[Groups(["getCustomer"])]
     private ?User $userr = null;
 
     public function getId(): ?int

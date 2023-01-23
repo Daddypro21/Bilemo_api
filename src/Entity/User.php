@@ -32,6 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getCustomer"])]
     private ?string $fullname = null;
 
     #[ORM\OneToMany(mappedBy: 'userr', targetEntity: Product::class)]

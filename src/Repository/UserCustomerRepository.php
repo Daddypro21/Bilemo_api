@@ -43,7 +43,8 @@ class UserCustomerRepository extends ServiceEntityRepository
     {
         $qp = $this->createQueryBuilder('c')
             ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit);
+            ->setMaxResults($limit)
+            ;
         return $qp->getQuery()->getResult();
     }
 
