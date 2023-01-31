@@ -33,6 +33,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserCustomerRepository::class)]
 class UserCustomer
 {
+
+    /**
+     * 
+     *
+     * Entité UserCustomer,
+     * 
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
