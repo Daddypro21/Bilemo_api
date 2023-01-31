@@ -38,6 +38,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
+    /**
+     * Class product renferme les differentes attributs et methodes
+     * width, length,height,weight,screen,video,wifi,camera,bluetooth...etc
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
