@@ -14,6 +14,13 @@ use JMS\Serializer\Annotation\Groups;
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+    /**
+     * Entité User
+     * fullname, email,password,
+     *
+     * 
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
